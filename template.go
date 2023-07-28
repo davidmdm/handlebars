@@ -7,8 +7,8 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/aymerick/raymond/ast"
-	"github.com/aymerick/raymond/parser"
+	"github.com/davidmdm/handlebars/ast"
+	"github.com/davidmdm/handlebars/parser"
 )
 
 // Template represents a handlebars template.
@@ -18,6 +18,7 @@ type Template struct {
 	helpers  map[string]reflect.Value
 	partials map[string]*partial
 	mutex    sync.RWMutex // protects helpers and partials
+	paths    []string
 }
 
 // newTemplate instanciate a new template without parsing it
@@ -36,6 +37,31 @@ func Parse(source string) (*Template, error) {
 	// parse template
 	if err := tpl.parse(); err != nil {
 		return nil, err
+	}
+
+	for _, node := range tpl.program.Body {
+		if node.Type() != ast.NodeMustache {
+			continue
+		}
+		ms, ok := node.(*ast.MustacheStatement)
+		if !ok {
+			continue
+		}
+
+		if ms.Expression == nil {
+			continue
+		}
+
+		pe, ok := ms.Expression.Path.(*ast.PathExpression)
+		if !ok {
+			continue
+		}
+
+		if pe.Original == "" {
+			continue
+		}
+
+		tpl.paths = append(tpl.paths, pe.Original)
 	}
 
 	return tpl, nil
@@ -74,6 +100,10 @@ func (tpl *Template) parse() error {
 	}
 
 	return nil
+}
+
+func (tpl *Template) ExpressionPaths() []string {
+	return tpl.paths
 }
 
 // Clone returns a copy of that template.
