@@ -1,11 +1,10 @@
-package handlebars
+package testing
 
 import "testing"
 
-//
 // Those tests come from:
-//   https://github.com/wycats/handlebars.js/blob/master/spec/partials.js
 //
+//	https://github.com/wycats/handlebars.js/blob/master/spec/partials.js
 var partialsTests = []Test{
 	{
 		"basic partials",

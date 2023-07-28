@@ -1,4 +1,4 @@
-package raymond
+package handlebars
 
 import "fmt"
 
@@ -56,7 +56,7 @@ func Example_struct() {
 		Person{"Jean", "Valjean"},
 		"Life is difficult",
 		[]Comment{
-			Comment{
+			{
 				Person{"Marcel", "Beliveau"},
 				"LOL!",
 			},

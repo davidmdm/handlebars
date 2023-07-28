@@ -1,4 +1,4 @@
-package handlebars
+package testing
 
 import (
 	"testing"
@@ -141,7 +141,7 @@ var subexpressionsTests = []Test{
 		map[string]interface{}{},
 		nil,
 		map[string]interface{}{
-			"blog": func(options *raymond.Options) string {
+			"blog": func(options *handlebars.Options) string {
 				return "val is " + options.HashStr("fun")
 			},
 			"equal": equalHelper,
@@ -155,11 +155,11 @@ var subexpressionsTests = []Test{
 		map[string]interface{}{},
 		nil,
 		map[string]interface{}{
-			"input": func(options *raymond.Options) raymond.SafeString {
-				return raymond.SafeString(`<input aria-label="` + options.HashStr("aria-label") + `" placeholder="` + options.HashStr("placeholder") + `" />`)
+			"input": func(options *handlebars.Options) handlebars.SafeString {
+				return handlebars.SafeString(`<input aria-label="` + options.HashStr("aria-label") + `" placeholder="` + options.HashStr("placeholder") + `" />`)
 			},
-			"t": func(param string) raymond.SafeString {
-				return raymond.SafeString(param)
+			"t": func(param string) handlebars.SafeString {
+				return handlebars.SafeString(param)
 			},
 		},
 		nil,
@@ -171,11 +171,11 @@ var subexpressionsTests = []Test{
 		map[string]map[string]string{"item": {"field": "Name", "placeholder": "Example User"}},
 		nil,
 		map[string]interface{}{
-			"input": func(options *raymond.Options) raymond.SafeString {
-				return raymond.SafeString(`<input aria-label="` + options.HashStr("aria-label") + `" placeholder="` + options.HashStr("placeholder") + `" />`)
+			"input": func(options *handlebars.Options) handlebars.SafeString {
+				return handlebars.SafeString(`<input aria-label="` + options.HashStr("aria-label") + `" placeholder="` + options.HashStr("placeholder") + `" />`)
 			},
-			"t": func(param string) raymond.SafeString {
-				return raymond.SafeString(param)
+			"t": func(param string) handlebars.SafeString {
+				return handlebars.SafeString(param)
 			},
 		},
 		nil,

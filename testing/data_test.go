@@ -1,4 +1,4 @@
-package handlebars
+package testing
 
 import (
 	"testing"
@@ -15,7 +15,7 @@ var dataTests = []Test{
 		"{{hello}}",
 		map[string]string{"noun": "cat"},
 		map[string]interface{}{"adjective": "happy"},
-		map[string]interface{}{"hello": func(options *raymond.Options) string {
+		map[string]interface{}{"hello": func(options *handlebars.Options) string {
 			return options.DataStr("adjective") + " " + options.ValueStr("noun")
 		}},
 		nil,
@@ -34,7 +34,7 @@ var dataTests = []Test{
 		`{{#let world="world"}}{{#if foo}}{{#if foo}}Hello {{@world}}{{/if}}{{/if}}{{/let}}`,
 		map[string]bool{"foo": true},
 		map[string]interface{}{"hello": "hello"},
-		map[string]interface{}{"let": func(options *raymond.Options) string {
+		map[string]interface{}{"let": func(options *handlebars.Options) string {
 			frame := options.NewDataFrame()
 
 			for k, v := range options.Hash() {
@@ -62,7 +62,7 @@ var dataTests = []Test{
 		`{{hello noun=@world}}`,
 		nil,
 		map[string]interface{}{"world": "world"},
-		map[string]interface{}{"hello": func(options *raymond.Options) string {
+		map[string]interface{}{"hello": func(options *handlebars.Options) string {
 			return "Hello " + options.HashStr("noun")
 		}},
 		nil,
@@ -116,7 +116,7 @@ var dataTests = []Test{
 		`{{#let foo=1 bar=2}}{{#let foo=bar.baz}}{{@bar}}{{@foo}}{{/let}}{{@foo}}{{/let}}`,
 		map[string]map[string]string{"bar": {"baz": "hello world"}},
 		nil,
-		map[string]interface{}{"let": func(options *raymond.Options) string {
+		map[string]interface{}{"let": func(options *handlebars.Options) string {
 			frame := options.NewDataFrame()
 
 			for k, v := range options.Hash() {
@@ -133,7 +133,7 @@ var dataTests = []Test{
 		`{{>myPartial}}`,
 		map[string]string{"noun": "cat"},
 		map[string]interface{}{"adjective": "happy"},
-		map[string]interface{}{"hello": func(options *raymond.Options) string {
+		map[string]interface{}{"hello": func(options *handlebars.Options) string {
 			return options.DataStr("adjective") + " " + options.ValueStr("noun")
 		}},
 		map[string]string{
@@ -146,7 +146,7 @@ var dataTests = []Test{
 		`{{hello world}}`,
 		map[string]interface{}{"exclaim": true, "world": "world"},
 		map[string]interface{}{"adjective": "happy"},
-		map[string]interface{}{"hello": func(context string, options *raymond.Options) string {
+		map[string]interface{}{"hello": func(context string, options *handlebars.Options) string {
 			str := "error"
 			if b, ok := options.Value("exclaim").(bool); ok {
 				if b {
@@ -167,10 +167,10 @@ var dataTests = []Test{
 		map[string]bool{"exclaim": true},
 		map[string]interface{}{"adjective": "happy"},
 		map[string]interface{}{
-			"hello": func(options *raymond.Options) string {
+			"hello": func(options *handlebars.Options) string {
 				return options.Fn()
 			},
-			"world": func(options *raymond.Options) string {
+			"world": func(options *handlebars.Options) string {
 				str := "error"
 				if b, ok := options.Value("exclaim").(bool); ok {
 					if b {
@@ -192,10 +192,10 @@ var dataTests = []Test{
 		map[string]interface{}{"exclaim": true, "zomg": "world"},
 		map[string]interface{}{"adjective": "happy"},
 		map[string]interface{}{
-			"hello": func(options *raymond.Options) string {
+			"hello": func(options *handlebars.Options) string {
 				return options.FnWith(map[string]string{"exclaim": "?"})
 			},
-			"world": func(context string, options *raymond.Options) string {
+			"world": func(context string, options *handlebars.Options) string {
 				return options.DataStr("adjective") + " " + context + options.ValueStr("exclaim")
 			},
 		},
@@ -208,10 +208,10 @@ var dataTests = []Test{
 		map[string]interface{}{"exclaim": true, "zomg": "world"},
 		map[string]interface{}{"adjective": "happy", "accessData": "#win"},
 		map[string]interface{}{
-			"hello": func(options *raymond.Options) string {
+			"hello": func(options *handlebars.Options) string {
 				return options.DataStr("accessData") + " " + options.FnWith(map[string]string{"exclaim": "?"})
 			},
-			"world": func(context string, options *raymond.Options) string {
+			"world": func(context string, options *handlebars.Options) string {
 				return options.DataStr("adjective") + " " + context + options.ValueStr("exclaim")
 			},
 		},
@@ -224,14 +224,14 @@ var dataTests = []Test{
 		map[string]interface{}{"exclaim": true, "zomg": "planet"},
 		map[string]interface{}{"adjective": "happy"},
 		map[string]interface{}{
-			"hello": func(options *raymond.Options) string {
+			"hello": func(options *handlebars.Options) string {
 				ctx := map[string]string{"exclaim": "?", "zomg": "world"}
 				data := options.NewDataFrame()
 				data.Set("adjective", "sad")
 
 				return options.FnCtxData(ctx, data)
 			},
-			"world": func(context string, options *raymond.Options) string {
+			"world": func(context string, options *handlebars.Options) string {
 				return options.DataStr("adjective") + " " + context + options.ValueStr("exclaim")
 			},
 		},
@@ -244,14 +244,14 @@ var dataTests = []Test{
 		map[string]interface{}{"exclaim": true, "zomg": "world"},
 		map[string]interface{}{"adjective": "happy"},
 		map[string]interface{}{
-			"hello": func(options *raymond.Options) string {
+			"hello": func(options *handlebars.Options) string {
 				ctx := map[string]string{"exclaim": "?"}
 				data := options.NewDataFrame()
 				data.Set("adjective", "sad")
 
 				return options.FnCtxData(ctx, data)
 			},
-			"world": func(context string, options *raymond.Options) string {
+			"world": func(context string, options *handlebars.Options) string {
 				return options.DataStr("adjective") + " " + context + options.ValueStr("exclaim")
 			},
 		},
@@ -279,7 +279,7 @@ var dataTests = []Test{
 		map[string]interface{}{"foo": "hello"},
 		map[string]interface{}{"depth": 0},
 		map[string]interface{}{
-			"helper": func(options *raymond.Options) string {
+			"helper": func(options *handlebars.Options) string {
 				data := options.NewDataFrame()
 
 				if depth, ok := options.Data("depth").(int); ok {
